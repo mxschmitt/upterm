@@ -83,8 +83,11 @@ func (c *command) Run() error {
 		c.setupTerminalResize(&g, c.stdin, c.ptmx, c.eventEmitter)
 	}
 
-	{
+	if isTty {
 		// input
+		// Only copy from stdin if it's a TTY. When stdin is not a TTY (e.g., spawned
+		// programmatically from non-interactive environments), it's often closed/EOF,
+		// which would cause io.Copy to return immediately and trigger shutdown.
 		ctx, cancel := context.WithCancel(c.ctx)
 		g.Add(func() error {
 			_, err := io.Copy(c.ptmx, uio.NewContextReader(ctx, c.stdin))
