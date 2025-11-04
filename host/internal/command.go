@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"os/signal"
 	"syscall"
-	"testing"
 
 	"github.com/oklog/run"
 	"github.com/olebedev/emitter"
@@ -108,7 +107,7 @@ func (c *command) Run() error {
 		})
 	}
 
-	if isTty || testing.Testing() {
+	if isTty {
 		// input - forward stdin to PTY
 		// TTY mode: stdin is an active terminal, we need to forward user input to the PTY.
 		// Test mode: stdin is mocked by the test, we need to forward test data to the PTY.
